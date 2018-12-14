@@ -449,18 +449,36 @@ namespace GraphTheoryEditor
             fs = new FileStream(sPath + sFilename, FileMode.Create, FileAccess.Write);
             sw = new StreamWriter(fs);
             sw.WriteLine("vertices. Vertex order,x,y");
-            for(int iCtr = 0; iCtr< gCurrentGraph.lVertexList.Count; iCtr++)
+            for(int iCtr = 0; iCtr < gCurrentGraph.lVertexList.Count; iCtr++)
             {
-                String sOrder = gCurrentGraph.lVertexList[iCtr].getOrder().ToString();
+                //String sOrder = gCurrentGraph.lVertexList[iCtr].getOrder().ToString();
                 double x = gCurrentGraph.lVertexList[iCtr].GetX(), y = gCurrentGraph.lVertexList[iCtr].GetY();
                 
                 //convert coordinates to homogenous coordinates (0, 1)
                 x /= pictureBoxMain.Width;
                 y /= pictureBoxMain.Height;
 
-                sw.WriteLine(sOrder + "," + x.ToString("#.####") + "," + y.ToString("#.####"));
+                sw.WriteLine(iCtr + "," + x.ToString("#.####") + "," + y.ToString("#.####"));
             }
 
+            sw.WriteLine("edges. Ei,Ej");
+            int n = gCurrentGraph.lVertexList.Count;
+            for (int iRow = 0; iRow < n; iRow++)
+                for (int iCol = iRow + 1; iCol < n; iCol++)
+                    if (gCurrentGraph.eAdjMatrix[iRow, iCol].ExistsEdge())
+                        sw.WriteLine(iRow + "," + iCol);
+
+            sw.WriteLine("graceful labels. l0,l1,...,ln");            
+            foreach (int[] aiLabeling in lGracefulLabelings)
+            {
+                for (int i = 0; i < aiLabeling.Length; i++)
+                    sw.Write(aiLabeling[i] + ",");
+
+                sw.WriteLine();
+            }
+
+            sw.WriteLine("end");
+            sw.Close();
 
             playSound();
             MessageBox.Show("Output file created , you can find the file at " + sPath + sFilename);            
