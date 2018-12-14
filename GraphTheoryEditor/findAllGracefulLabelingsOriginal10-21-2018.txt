@@ -1,0 +1,141 @@
+        private void findAllGracefulLabelings(Graph gTargetGraph, GracefulMatrix gracefulMatrix, int iLevel, int iEdgeOrderIndex)
+        {
+            int iRow = 0, iCol;
+
+            if (iLevel < 2)
+            {
+                //Potential Graceful labeling found
+                int iUnlabeledEdgeIndex = findNextUnlabeledEdgeIndex(gTargetGraph, 0);
+                iRow = lEdgeDFSOrder[iUnlabeledEdgeIndex].row;
+                iCol = lEdgeDFSOrder[iUnlabeledEdgeIndex].col;
+
+                String sRowLabel = gTargetGraph.lVertexList[iRow].getLabel();
+                String sColLabel = gTargetGraph.lVertexList[iCol].getLabel();
+
+                if(sRowLabel != "" && sColLabel!= "")
+                {
+                    int iRowLabel = Convert.ToInt16(sRowLabel);
+                    int iColLabel = Convert.ToInt16(sColLabel);
+
+                    if(Math.Abs(iRowLabel - iColLabel) == 1)
+                    {
+                        //Graceful labeling found!!!!
+                        int[] aGracefulVertexLabels = new int[gTargetGraph.getNumVertices()];
+
+                        for (int i = 0; i < aGracefulVertexLabels.Length; i++)
+                        {
+                            aGracefulVertexLabels[i] = Convert.ToInt16(gTargetGraph.lVertexList[i].getLabel());
+                        }
+
+                        //Add labeling to list
+                        lGracefulVertexLabels.Add(aGracefulVertexLabels);
+                        return;
+                    }
+                }
+
+                //Graceful labeling not found. Kill branch
+                return;
+            }
+                        
+            iRow = lEdgeDFSOrder[iEdgeOrderIndex].row;
+            iCol = lEdgeDFSOrder[iEdgeOrderIndex].col;
+
+            //-----------------------------------------------------------------------------------------------
+            //- Find pairs that match the current labeled vertex                                            -
+            //- if pairs are found, create execution tree for each pair                                     -
+            //-----------------------------------------------------------------------------------------------
+            List<GracefulAlgorithm.edgeLocation> allLabelPairs = gracefulMatrix.findAvailableLabelPairs(iLevel, gTargetGraph, iRow, iCol);
+            int iNextEdgerOrderIndex;
+
+            //If no pairs were found, then execution branch dies since it is not longer possible to find a graceful labeling for the branch
+            if (allLabelPairs.Count < 1)
+                return;
+
+            foreach(GracefulAlgorithm.edgeLocation labelPair in allLabelPairs) {                
+                iNextEdgerOrderIndex = findNextUnlabeledEdgeIndex(gTargetGraph, iEdgeOrderIndex);
+
+                if (iNextEdgerOrderIndex > -1)
+                {
+                    //Clone graph and Graceful Matrix by Deep Copy
+                    Graph g = (Graph)ObjectExtensions.Copy(gTargetGraph);
+                    GracefulMatrix gm = (GracefulMatrix)ObjectExtensions.Copy(gracefulMatrix);
+
+                    //Set edge label
+                    g.eAdjMatrix[iRow, iCol].setLabel(iLevel.ToString());
+
+                    //Set vertices labels
+                    g.lVertexList[iRow].setLabel(labelPair.row.ToString());
+                    g.lVertexList[iCol].setLabel(labelPair.col.ToString());
+
+                    //Lock pair. 
+                    gm.lockPair(labelPair.row, labelPair.col);
+
+                    //Lock entire label if no more unlabeled adjacent vertices exist
+                    if (g.findAdjacentUnlabeledVertices(iRow).Count < 1)
+                        gm.lockVertexLabel(labelPair.row);
+
+                    //Lock entire label if no more unlabeled adjacent vertices exist
+                    if (g.findAdjacentUnlabeledVertices(iCol).Count < 1)
+                        gm.lockVertexLabel(labelPair.col);
+
+                    findAllGracefulLabelings(g, gm, iLevel - 1, iNextEdgerOrderIndex);
+                }
+            }
+
+            //-----------------------------------------------------------------------------------------------
+            //- For each unlabeled edge                                                                     -
+            //- Find all pairs of vertex labels that generate the level                                     -
+            //- create execution branches for each pair by labeling unlabeled edges and their adjacent      -
+            //- vertices                                                                                    -
+            //-----------------------------------------------------------------------------------------------
+            iEdgeOrderIndex = findNextUnlabeledEdgeIndex(gTargetGraph, 0, false);
+            while (iEdgeOrderIndex > -1 && iEdgeOrderIndex < lEdgeDFSOrder.Length)
+            {
+                iRow = lEdgeDFSOrder[iEdgeOrderIndex].row;
+                iCol = lEdgeDFSOrder[iEdgeOrderIndex].col;
+
+                allLabelPairs = new List<edgeLocation>();
+                allLabelPairs = gracefulMatrix.findAvailableLabelPairs(iLevel, gTargetGraph, iRow, iCol);
+
+                foreach (GracefulAlgorithm.edgeLocation labelPair in allLabelPairs)
+                {
+                    //Find next unlabeled edge even if we have to start from the beginning
+                    iNextEdgerOrderIndex = findNextUnlabeledEdgeIndex(gTargetGraph, iEdgeOrderIndex, false);
+                    //a-a for some reason, programs gets into infinte loop
+
+                    //Make sure there are available edges left
+                    if (iNextEdgerOrderIndex > -1)
+                    {
+                        //Clone graph and Graceful Matrix by Deep Copy
+                        Graph g = (Graph)ObjectExtensions.Copy(gTargetGraph);
+                        GracefulMatrix gm = (GracefulMatrix)ObjectExtensions.Copy(gracefulMatrix);
+
+                        //Set edge label
+                        g.eAdjMatrix[iRow, iCol].setLabel(iLevel.ToString());
+
+                        //Set vertices labels
+                        g.lVertexList[iRow].setLabel(labelPair.row.ToString());
+                        g.lVertexList[iCol].setLabel(labelPair.col.ToString());
+
+                        //Lock pair. 
+                        gm.lockPair(labelPair.row, labelPair.col);
+
+                        //Lock entire label if no more unlabeled adjacent vertices exist
+                        if (g.findAdjacentUnlabeledVertices(iRow).Count < 1)
+                            gm.lockVertexLabel(labelPair.row);
+
+                        //Lock entire label if no more unlabeled adjacent vertices exist
+                        if (g.findAdjacentUnlabeledVertices(iCol).Count < 1)
+                            gm.lockVertexLabel(labelPair.col);
+
+                        findAllGracefulLabelings(g, gm, iLevel - 1, iNextEdgerOrderIndex);
+                    }
+                    
+                }
+
+                //Continue with the next unlabeled edge
+                iEdgeOrderIndex = findNextUnlabeledEdgeIndex(gTargetGraph, iEdgeOrderIndex);
+            }
+
+
+        }
