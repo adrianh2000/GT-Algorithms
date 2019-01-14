@@ -136,6 +136,17 @@ namespace GraphTheoryEditor
             eAdjMatrix[iVertexIndex0, iVertexIndex1].SetVerticesV0V1(iVertexIndex0,iVertexIndex1);
         }
            
+        //Relabels all vertices to the new labels passed in aiNewLabels
+        //The index and number of vertices have to match those of the current graph
+        public void relabelAllVertices(int[] aiNewLabels)
+        {
+            //make sure number of labels match number of vertices
+            if (aiNewLabels.Length != lVertexList.Count)
+                return;
+
+            for (int i = 0; i < aiNewLabels.Length; i++)
+                lVertexList[i].setLabel(aiNewLabels[i]);
+        }
 
         private void Swap(ref int iA, ref int iB)
         {
@@ -144,7 +155,7 @@ namespace GraphTheoryEditor
             iB = iTemp;
         }
 
-        public void DrawGraph(Graphics g)
+        public void DrawGraph(Graphics g, int iFontSizeNew = -1, int dRadiusNew = -1)
         {
             int iCol, iRow, i, iNumVertices = lVertexList.Count, iPosX0, iPosY0, iPosX1, iPosY1;
            
@@ -162,7 +173,7 @@ namespace GraphTheoryEditor
 
             //Draw Vertices
             for (i = 0; i < iNumVertices; i++)
-                lVertexList[i].DrawVertex(g);
+                lVertexList[i].DrawVertex(g, iFontSizeNew, dRadiusNew);
         }
 
         public int iFindVertexIndex(int iPosX, int iPosY)

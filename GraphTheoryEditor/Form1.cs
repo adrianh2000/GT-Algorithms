@@ -16,6 +16,7 @@ namespace GraphTheoryEditor
 
         Graph gCurrentGraph;
         String sCurrentAction;
+        List<int[]> lAllGracefulLabelings;
 
         public Form1()
         {
@@ -27,7 +28,8 @@ namespace GraphTheoryEditor
             this.CenterToScreen();
             gCurrentGraph = new Graph();
             sCurrentAction = "SELECTING";
-            iVertexSelectedIndex = -1;            
+            iVertexSelectedIndex = -1;
+            lAllGracefulLabelings = new List<int[]>();
         }
 
         private void pictureBoxMain_Click(object sender, EventArgs e)
@@ -498,6 +500,8 @@ namespace GraphTheoryEditor
             StreamReader sr;
             Graph newGraph = new Graph();
 
+            lAllGracefulLabelings.Clear();
+
             try
             {
                 OpenFileDialog dialogOpen = new OpenFileDialog();
@@ -530,7 +534,7 @@ namespace GraphTheoryEditor
                         }
                     }
 
-                    ////Read edges
+                    //Read edges
                     while ((!sr.EndOfStream) && (sCurrentLine.IndexOf("graceful") < 0))
                     {
                         sCurrentLine = sr.ReadLine();
@@ -544,32 +548,64 @@ namespace GraphTheoryEditor
                         }
                     }
 
+                    //Read labelings
+                    while ((!sr.EndOfStream) && (sCurrentLine.IndexOf("end") < 0))
+                    {
+                        sCurrentLine = sr.ReadLine();
+                        if (sCurrentLine.IndexOf("end") < 0)
+                        {
+                            //If last element is a comma, remove it
+                            if (sCurrentLine.ElementAt(sCurrentLine.Length - 1) == ',')
+                                sCurrentLine = sCurrentLine.Substring(0, sCurrentLine.Length - 1);
+
+                            String[] aCurLine = sCurrentLine.Split(',');
+                            int[] iCurLine = aCurLine.Select(int.Parse).ToArray();
+
+                            //Add labeling to list
+                            lAllGracefulLabelings.Add(iCurLine);                            
+                        }
+                    }
+
                     sr.Close();
 
                     //Display new form
                     using (Form formGraceful = new Form())
                     {
                         formGraceful.Text = "Graceful Labeling Results";
-                        formGraceful.Width = 800;
-                        formGraceful.Height = 600;
+                        formGraceful.Width = 1024;
+                        formGraceful.Height = 768;
+                        formGraceful.StartPosition = FormStartPosition.CenterScreen;
                         PictureBox pictureBoxGraceful = new PictureBox();
-                        pictureBoxGraceful.Width = 700;
-                        pictureBoxGraceful.Height = 500;
+                        pictureBoxGraceful.Width = Convert.ToInt16(formGraceful.Width * .95);
+                        pictureBoxGraceful.Height = Convert.ToInt16(formGraceful.Height * .9);
                         pictureBoxGraceful.BackColor = Color.Beige;
 
-                        Bitmap imgTarget = new Bitmap(700, 500);
+                        int iNumBoxesCol = 4, iNumBoxesRow = 4;
+                        int iBoxWidth = pictureBoxGraceful.Width / iNumBoxesCol;
+                        int iBoxHeight = pictureBoxGraceful.Height / iNumBoxesRow;
+                        Bitmap imgTarget = new Bitmap(pictureBoxGraceful.Width, pictureBoxGraceful.Height);
                         Graphics myGraphics = Graphics.FromImage(imgTarget);
-                        displayGraphInHomogenousCoordinates(ref myGraphics, newGraph, 0, 0, pictureBoxGraceful.Width/2, pictureBoxGraceful.Height/2);
-                        displayGraphInHomogenousCoordinates(ref myGraphics, newGraph, pictureBoxGraceful.Width / 2, 0, pictureBoxGraceful.Width, pictureBoxGraceful.Height / 2);
-                        pictureBoxGraceful.Image = imgTarget;
+                        
+                        for(int iCtr = 0; iCtr < lAllGracefulLabelings.Count; iCtr++)
+                        {
+                            int[] aiLabel = lAllGracefulLabelings[iCtr];
+                            int x = iBoxWidth * (iCtr % iNumBoxesCol), y = iBoxHeight * (iCtr / iNumBoxesCol);
 
-                        //a-a
+                            displayGraphInHomogenousCoordinates(ref myGraphics, newGraph, x, y, x + iBoxWidth, y + iBoxHeight, aiLabel);
+
+                            if (y > iBoxHeight * iNumBoxesRow)
+                                break;
+                        }
+
+                        pictureBoxGraceful.Image = imgTarget;
+                                                                     
 
                         int btnWidth = 50, btnHeight = 20;
                         int posY = pictureBoxGraceful.Height + btnHeight;
                         Button btnFirst = new Button();
                         btnFirst.Text = "First";
                         btnFirst.Location = new Point(0, posY);
+                        btnFirst.Click += new EventHandler(btnFirst_Click);
 
                         Button btnPrev = new Button();
                         btnPrev.Text = "<--";
@@ -600,12 +636,22 @@ namespace GraphTheoryEditor
             }
         }
 
+        private void btnFirst_Click(object sender, System.EventArgs e)
+        {
+            int[] aLabels = lAllGracefulLabelings[0];
+            int iLabel = aLabels[0];
+        }
+
+
+
         //Displays the graph g in the pictureBox
         //The graph will display inside the x0, y0, x1, y1 rectangle
-        public void displayGraphInHomogenousCoordinates(ref Graphics e, Graph gTargetGraph, int x0, int y0, int x1, int y1)
+        public void displayGraphInHomogenousCoordinates(ref Graphics e, Graph gTargetGraph, int x0, int y0, int x1, int y1, int[] aiNewLabels)
         {
             Double w = x1 - x0, h = y1 - y0;
             Graph g = (Graph)ObjectExtensions.Copy(gTargetGraph);
+            int iNumVertices = g.getNumVertices();
+            g.relabelAllVertices(aiNewLabels);
 
             //convert graph's homogeneous coordinates to real (x0, y0, x1, y1) coordinates
             foreach (Vertex v in g.lVertexList)
@@ -614,6 +660,18 @@ namespace GraphTheoryEditor
                 double y = h * v.GetY() + y0;
                 v.SetXY(x, y);
             }
+
+            //set graceful edge labels            
+            for (int iRow = 0; iRow < iNumVertices; iRow++)
+                for (int iCol = iRow + 1; iCol < iNumVertices; iCol++)
+                    if (g.eAdjMatrix[iRow, iCol].ExistsEdge())
+                    {
+                        int iLabelVertexRow = g.lVertexList[iRow].getLabel();
+                        int iLabelVertexCol = g.lVertexList[iCol].getLabel();
+                        String sEdgeLabel = Convert.ToString(Math.Abs(iLabelVertexRow - iLabelVertexCol));
+
+                        g.eAdjMatrix[iRow, iCol].setLabel(sEdgeLabel);
+                    }
 
             //display graph
             g.DrawGraph(e);

@@ -95,13 +95,13 @@ namespace GraphTheoryEditor
         public void drawEdgeLabel(Graphics g, int iPosX0, int iPosY0, int iPosX1, int iPosY1)
         {
             //Pen myPen = new Pen(cVertexColor, 5);
-            int dPosX = (iPosX0 + iPosX1) / 2;
-            int dPosY = (iPosY0 + iPosY1) / 2;
+            int iFontSize = 10;
+            int dPosX = (iPosX0 + iPosX1) / 2 - iFontSize/2;
+            int dPosY = (iPosY0 + iPosY1) / 2 - iFontSize / 2;
             Brush brStringBrush = new SolidBrush(cEdgeLabelColor);
-            Font drawFont = new Font("Arial", 16);
+            Font drawFont = new Font("Arial", iFontSize);
             StringFormat drawFormat = new StringFormat();
             drawFormat.FormatFlags = StringFormatFlags.DisplayFormatControl;
-
  
             g.DrawString(sLabel.ToString(), drawFont, brStringBrush, (float)(dPosX), (float)(dPosY), drawFormat);
         }

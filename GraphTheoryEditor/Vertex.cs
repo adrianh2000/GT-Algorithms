@@ -27,7 +27,7 @@ namespace GraphTheoryEditor
             else
                 dR = 30;
 
-            cVertexColor = System.Drawing.Color.Red;
+            cVertexColor = System.Drawing.Color.Tan;
             cLabelColor = System.Drawing.Color.Black;
             bVisited = false;
             iLabel = _iLabel;           
@@ -71,18 +71,19 @@ namespace GraphTheoryEditor
         public void setVisited(Boolean _bVisited) { bVisited = _bVisited; }
         public Boolean getVisited() { return bVisited;  }
 
-        public void DrawVertex(Graphics g)
+        public void DrawVertex(Graphics g, int iFontSizeNew = -1, int dRadiusNew=-1)
         {
             //Pen myPen = new Pen(cVertexColor, 5);
             Brush brVertexBrush = new SolidBrush(cVertexColor);
             Brush brStringBrush = new SolidBrush(cLabelColor);
-            Font drawFont = new Font("Arial", 16);
+            Font drawFont = new Font("Arial", iFontSizeNew!=-1? iFontSizeNew:16);
             StringFormat drawFormat = new StringFormat();
-            drawFormat.FormatFlags = StringFormatFlags.DisplayFormatControl;
-            
+            drawFormat.FormatFlags = StringFormatFlags.DisplayFormatControl;            
 
-            //g.DrawEllipse(myPen, Convert.ToInt32(dPosX), Convert.ToInt32(dPosY), Convert.ToInt32(dRadius), Convert.ToInt32(dRadius));
-            g.FillEllipse(brVertexBrush, Convert.ToInt32(dPosX - dRadius / 2), Convert.ToInt32(dPosY - dRadius / 2), Convert.ToInt32(dRadius), Convert.ToInt32(dRadius));
+            if(dRadiusNew == -1)
+                g.FillEllipse(brVertexBrush, Convert.ToInt32(dPosX - dRadius / 2), Convert.ToInt32(dPosY - dRadius / 2), Convert.ToInt32(dRadius), Convert.ToInt32(dRadius));
+            else
+                g.FillEllipse(brVertexBrush, Convert.ToInt32(dPosX - dRadiusNew / 2), Convert.ToInt32(dPosY - dRadiusNew / 2), Convert.ToInt32(dRadiusNew), Convert.ToInt32(dRadiusNew));
 
             g.DrawString(iLabel.ToString(), drawFont, brStringBrush, (float)(dPosX - dRadius/2), (float)(dPosY - dRadius/2), drawFormat);
         }
