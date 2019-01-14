@@ -7,7 +7,7 @@ using System.Windows.Forms;
 
 namespace GraphTheoryEditor
 {
-    class Vertex
+    public class Vertex
     {
         Double dPosX, dPosY, dRadius;
         System.Drawing.Color cVertexColor;

@@ -7,7 +7,7 @@ using System.Windows.Forms;
 
 namespace GraphTheoryEditor
 {
-    class Edge
+    public class Edge
     {        
         int iVertex0, iVertex1;
         int iThickness, iOrder;

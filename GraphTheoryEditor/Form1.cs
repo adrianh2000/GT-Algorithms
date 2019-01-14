@@ -518,25 +518,30 @@ namespace GraphTheoryEditor
                     while ((!sr.EndOfStream) && (sCurrentLine.IndexOf("edges") < 0))
                     {                        
                         sCurrentLine = sr.ReadLine();
-                        String[] aCurLine = sCurrentLine.Split(',');
-                        double X0 = Convert.ToDouble(aCurLine[1]);
-                        double y0 = Convert.ToDouble(aCurLine[2]);
 
-                        //Add vertices to graph
-                        Vertex myVertex = new Vertex(X0, y0, 10, Convert.ToInt16(aCurLine[0]));
-                        newGraph.lVertexList.Add(myVertex);
+                        if (sCurrentLine.IndexOf("edges") < 0) { 
+                            String[] aCurLine = sCurrentLine.Split(',');
+                            double X0 = Convert.ToDouble(aCurLine[1]);
+                            double y0 = Convert.ToDouble(aCurLine[2]);
+
+                            //Add vertices to graph
+                            Vertex myVertex = new Vertex(X0, y0, 20, Convert.ToInt16(aCurLine[0]));
+                            newGraph.lVertexList.Add(myVertex);
+                        }
                     }
 
                     ////Read edges
                     while ((!sr.EndOfStream) && (sCurrentLine.IndexOf("graceful") < 0))
                     {
                         sCurrentLine = sr.ReadLine();
-                        String[] aCurLine = sCurrentLine.Split(',');
-                        int e0 = Convert.ToInt16(aCurLine[0]);
-                        int e1 = Convert.ToInt16(aCurLine[1]);
+                        if (sCurrentLine.IndexOf("graceful") < 0) { 
+                            String[] aCurLine = sCurrentLine.Split(',');
+                            int e0 = Convert.ToInt16(aCurLine[0]);
+                            int e1 = Convert.ToInt16(aCurLine[1]);
 
-                        //Add edge to graph
-                        newGraph.AddEdge(e0, e1);
+                            //Add edge to graph
+                            newGraph.AddEdge(e0, e1);
+                        }
                     }
 
                     sr.Close();
@@ -551,6 +556,14 @@ namespace GraphTheoryEditor
                         pictureBoxGraceful.Width = 700;
                         pictureBoxGraceful.Height = 500;
                         pictureBoxGraceful.BackColor = Color.Beige;
+
+                        Bitmap imgTarget = new Bitmap(700, 500);
+                        Graphics myGraphics = Graphics.FromImage(imgTarget);
+                        displayGraphInHomogenousCoordinates(ref myGraphics, newGraph, 0, 0, pictureBoxGraceful.Width/2, pictureBoxGraceful.Height/2);
+                        displayGraphInHomogenousCoordinates(ref myGraphics, newGraph, pictureBoxGraceful.Width / 2, 0, pictureBoxGraceful.Width, pictureBoxGraceful.Height / 2);
+                        pictureBoxGraceful.Image = imgTarget;
+
+                        //a-a
 
                         int btnWidth = 50, btnHeight = 20;
                         int posY = pictureBoxGraceful.Height + btnHeight;
@@ -576,6 +589,7 @@ namespace GraphTheoryEditor
                         formGraceful.Controls.Add(btnNext);
                         formGraceful.Controls.Add(btnLast);
 
+                        
                         formGraceful.ShowDialog();
                     }
                 }
@@ -588,9 +602,21 @@ namespace GraphTheoryEditor
 
         //Displays the graph g in the pictureBox
         //The graph will display inside the x0, y0, x1, y1 rectangle
-        public void displayGraphInForm(ref PictureBox pBox, Graph g, int x0, int y0, int x1, int y1)
+        public void displayGraphInHomogenousCoordinates(ref Graphics e, Graph gTargetGraph, int x0, int y0, int x1, int y1)
         {
-            //a-a
+            Double w = x1 - x0, h = y1 - y0;
+            Graph g = (Graph)ObjectExtensions.Copy(gTargetGraph);
+
+            //convert graph's homogeneous coordinates to real (x0, y0, x1, y1) coordinates
+            foreach (Vertex v in g.lVertexList)
+            {                
+                double x = w * v.GetX() + x0;
+                double y = h * v.GetY() + y0;
+                v.SetXY(x, y);
+            }
+
+            //display graph
+            g.DrawGraph(e);
         }
 
         //returns an array with the coordinates of the minimum rectangle containing all the vertices
