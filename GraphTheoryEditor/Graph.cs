@@ -8,7 +8,7 @@ using System.Collections;
 
 namespace GraphTheoryEditor
 {
-    class Graph 
+    public class Graph 
     {
         const int iAdjMatrixNumVerticesStep = 20;
         

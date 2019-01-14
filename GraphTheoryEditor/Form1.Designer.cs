@@ -39,6 +39,7 @@
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.graphToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveGraphScreenshotToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.algorithmToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showDistancesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.depthFirstSearchDFSToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -51,7 +52,7 @@
             this.buttonDrawEdge = new System.Windows.Forms.Button();
             this.buttonDrawVertex = new System.Windows.Forms.Button();
             this.labelMouseCoordinates = new System.Windows.Forms.Label();
-            this.saveGraphScreenshotToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.loadGracefulResultsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMain)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.panelMain.SuspendLayout();
@@ -99,47 +100,55 @@
             // newToolStripMenuItem
             // 
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
             this.newToolStripMenuItem.Text = "&New";
             // 
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
             this.openToolStripMenuItem.Text = "&Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
             this.saveToolStripMenuItem.Text = "&Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // saveasToolStripMenuItem
             // 
             this.saveasToolStripMenuItem.Name = "saveasToolStripMenuItem";
-            this.saveasToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.saveasToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
             this.saveasToolStripMenuItem.Text = "Save &as...";
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(149, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(118, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
             this.exitToolStripMenuItem.Text = "E&xit";
             // 
             // graphToolStripMenuItem
             // 
             this.graphToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.saveGraphScreenshotToolStripMenuItem});
+            this.saveGraphScreenshotToolStripMenuItem,
+            this.loadGracefulResultsToolStripMenuItem});
             this.graphToolStripMenuItem.Name = "graphToolStripMenuItem";
             this.graphToolStripMenuItem.Size = new System.Drawing.Size(51, 20);
             this.graphToolStripMenuItem.Text = "&Graph";
+            // 
+            // saveGraphScreenshotToolStripMenuItem
+            // 
+            this.saveGraphScreenshotToolStripMenuItem.Name = "saveGraphScreenshotToolStripMenuItem";
+            this.saveGraphScreenshotToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
+            this.saveGraphScreenshotToolStripMenuItem.Text = "Save Graph &Screenshot";
+            this.saveGraphScreenshotToolStripMenuItem.Click += new System.EventHandler(this.saveGraphScreenshotToolStripMenuItem_Click);
             // 
             // algorithmToolStripMenuItem
             // 
@@ -254,12 +263,12 @@
             this.labelMouseCoordinates.TabIndex = 4;
             this.labelMouseCoordinates.Text = "labelMouseCoordinates";
             // 
-            // saveGraphScreenshotToolStripMenuItem
+            // loadGracefulResultsToolStripMenuItem
             // 
-            this.saveGraphScreenshotToolStripMenuItem.Name = "saveGraphScreenshotToolStripMenuItem";
-            this.saveGraphScreenshotToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
-            this.saveGraphScreenshotToolStripMenuItem.Text = "Save Graph &Screenshot";
-            this.saveGraphScreenshotToolStripMenuItem.Click += new System.EventHandler(this.saveGraphScreenshotToolStripMenuItem_Click);
+            this.loadGracefulResultsToolStripMenuItem.Name = "loadGracefulResultsToolStripMenuItem";
+            this.loadGracefulResultsToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
+            this.loadGracefulResultsToolStripMenuItem.Text = "&Load Graceful Results";
+            this.loadGracefulResultsToolStripMenuItem.Click += new System.EventHandler(this.loadGracefulResultsToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -308,6 +317,7 @@
         private System.Windows.Forms.ToolStripMenuItem depthFirstSearchDFSToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem findGracefulLabelingsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveGraphScreenshotToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem loadGracefulResultsToolStripMenuItem;
     }
 }
 

@@ -445,18 +445,22 @@ namespace GraphTheoryEditor
             sw.Close();
 
             //----- create file to be imported into the python program that displays all labels graphically
+            //Get coordinates of minimum rectangle enclosing all vertices
+            Double[] adBoxCoordinates = findBoxCoordinates();
+            Double x0 = adBoxCoordinates[0], y0 = adBoxCoordinates[1], x1 = adBoxCoordinates[2], y1 = adBoxCoordinates[3];
             sFilename = "graphics labels.txt";
             fs = new FileStream(sPath + sFilename, FileMode.Create, FileAccess.Write);
             sw = new StreamWriter(fs);
             sw.WriteLine("vertices. Vertex order,x,y");
             for(int iCtr = 0; iCtr < gCurrentGraph.lVertexList.Count; iCtr++)
-            {
-                //String sOrder = gCurrentGraph.lVertexList[iCtr].getOrder().ToString();
+            {                
                 double x = gCurrentGraph.lVertexList[iCtr].GetX(), y = gCurrentGraph.lVertexList[iCtr].GetY();
-                
-                //convert coordinates to homogenous coordinates (0, 1)
-                x /= pictureBoxMain.Width;
-                y /= pictureBoxMain.Height;
+
+                //convert coordinates to homogenous coordinates (0, 1) inside the box
+                //x /= pictureBoxMain.Width;
+                //y /= pictureBoxMain.Height;
+                x = (x - x0) / (x1 - x0);
+                y = (y - y0) / (y1 - y0);
 
                 sw.WriteLine(iCtr + "," + x.ToString("#.####") + "," + y.ToString("#.####"));
             }
@@ -482,6 +486,159 @@ namespace GraphTheoryEditor
 
             playSound();
             MessageBox.Show("Output file created , you can find the file at " + sPath + sFilename);            
+        }
+
+        private void loadGracefulResultsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            String sFilename, sPath = Directory.GetCurrentDirectory();
+            DirectoryInfo diCurDir = new DirectoryInfo(sPath);
+            DirectoryInfo twoLevelsUp = diCurDir.Parent.Parent;
+            sPath = twoLevelsUp.FullName;
+            FileStream fs;
+            StreamReader sr;
+            Graph newGraph = new Graph();
+
+            try
+            {
+                OpenFileDialog dialogOpen = new OpenFileDialog();
+
+                //dialogOpen.InitialDirectory = Directory.GetCurrentDirectory();
+                dialogOpen.InitialDirectory = sPath + @"\Output";
+
+                if (dialogOpen.ShowDialog() == DialogResult.OK)
+                {
+                    sFilename = dialogOpen.FileName;
+                    fs = new FileStream(sFilename, FileMode.Open, FileAccess.Read);
+                    sr = new StreamReader(fs);
+
+                    //Skip first line
+                    String sCurrentLine = sr.ReadLine();
+
+                    ////Read vertices
+                    while ((!sr.EndOfStream) && (sCurrentLine.IndexOf("edges") < 0))
+                    {                        
+                        sCurrentLine = sr.ReadLine();
+                        String[] aCurLine = sCurrentLine.Split(',');
+                        double X0 = Convert.ToDouble(aCurLine[1]);
+                        double y0 = Convert.ToDouble(aCurLine[2]);
+
+                        //Add vertices to graph
+                        Vertex myVertex = new Vertex(X0, y0, 10, Convert.ToInt16(aCurLine[0]));
+                        newGraph.lVertexList.Add(myVertex);
+                    }
+
+                    ////Read edges
+                    while ((!sr.EndOfStream) && (sCurrentLine.IndexOf("graceful") < 0))
+                    {
+                        sCurrentLine = sr.ReadLine();
+                        String[] aCurLine = sCurrentLine.Split(',');
+                        int e0 = Convert.ToInt16(aCurLine[0]);
+                        int e1 = Convert.ToInt16(aCurLine[1]);
+
+                        //Add edge to graph
+                        newGraph.AddEdge(e0, e1);
+                    }
+
+                    sr.Close();
+
+                    //Display new form
+                    using (Form formGraceful = new Form())
+                    {
+                        formGraceful.Text = "Graceful Labeling Results";
+                        formGraceful.Width = 800;
+                        formGraceful.Height = 600;
+                        PictureBox pictureBoxGraceful = new PictureBox();
+                        pictureBoxGraceful.Width = 700;
+                        pictureBoxGraceful.Height = 500;
+                        pictureBoxGraceful.BackColor = Color.Beige;
+
+                        int btnWidth = 50, btnHeight = 20;
+                        int posY = pictureBoxGraceful.Height + btnHeight;
+                        Button btnFirst = new Button();
+                        btnFirst.Text = "First";
+                        btnFirst.Location = new Point(0, posY);
+
+                        Button btnPrev = new Button();
+                        btnPrev.Text = "<--";
+                        btnPrev.Location = new Point(btnWidth, posY);
+
+                        Button btnNext = new Button();
+                        btnNext.Text = "-->";
+                        btnNext.Location = new Point(btnWidth * 2, posY);
+
+                        Button btnLast = new Button();
+                        btnLast.Text = "Last";
+                        btnLast.Location = new Point(btnWidth * 3, posY);
+
+                        formGraceful.Controls.Add(pictureBoxGraceful);
+                        formGraceful.Controls.Add(btnFirst);
+                        formGraceful.Controls.Add(btnPrev);
+                        formGraceful.Controls.Add(btnNext);
+                        formGraceful.Controls.Add(btnLast);
+
+                        formGraceful.ShowDialog();
+                    }
+                }
+            }
+            catch(Exception)
+            {
+                throw new ApplicationException("Failed opening graceful results graph");
+            }
+        }
+
+        //Displays the graph g in the pictureBox
+        //The graph will display inside the x0, y0, x1, y1 rectangle
+        public void displayGraphInForm(ref PictureBox pBox, Graph g, int x0, int y0, int x1, int y1)
+        {
+            //a-a
+        }
+
+        //returns an array with the coordinates of the minimum rectangle containing all the vertices
+        //[0] -- > x0
+        //[1] -- > y0
+        //[2] -- > x1
+        //[3] -- > y1
+        public Double[] findBoxCoordinates()
+        {
+            Double[] result = {-1, -1, -1, -1};            
+            Graph g = gCurrentGraph;
+
+            if (g.getNumVertices() < 1)
+                return result;
+
+            double r = g.lVertexList[0].GetRadius();
+            Double x0 = g.lVertexList[0].GetX();
+            Double y0 = g.lVertexList[0].GetY();
+            Double x1 = g.lVertexList[0].GetX();
+            Double y1 = g.lVertexList[0].GetY();
+
+            foreach(Vertex v in g.lVertexList)
+            {
+                if (v.GetX() < x0)
+                    x0 = v.GetX();
+
+                if (v.GetY() < y0)
+                    y0 = v.GetY();
+
+                if (v.GetX() > x1)
+                    x1 = v.GetX();
+
+                if (v.GetY() > y1)
+                    y1 = v.GetY();
+            }
+
+            //Add or subtract radius before returning result
+            x0 -= r;
+            y0 -= r;
+            x1 += r;
+            y1 += r;
+
+            result[0] = x0;
+            result[1] = y0;
+            result[2] = x1;
+            result[3] = y1;
+
+            return result;
         }
 
         public void playSound()
