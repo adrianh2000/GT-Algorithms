@@ -19,13 +19,23 @@ namespace GraphTheoryEditor
         public void setVisited(Boolean _bVisited) { bVisited = _bVisited; }
         public Boolean getVisited() { return bVisited; }
 
+        public Edge(int iV0, int iV1, Color cEdgeColor_, Color cEdgeLabelColor_)
+        {
+            init(iV0, iV1, cEdgeColor_, cEdgeLabelColor_);
+        }
+
         public Edge(int iV0, int iV1)
+        {
+            init(iV0, iV1, Color.Blue, Color.Black);
+        }
+
+        public void init(int iV0, int iV1, Color cEdgeColor_, Color cEdgeLabelColor_)
         {
             iVertex0 = iV0;
             iVertex1 = iV1;
             iThickness = 2;
-            cEdgeColor = System.Drawing.Color.Blue;
-            cEdgeLabelColor = System.Drawing.Color.Black;
+            cEdgeColor = cEdgeColor_;
+            cEdgeLabelColor = cEdgeLabelColor_;
             dWeight = 1;
             sLabel = "";
             iOrder = -1;
@@ -84,7 +94,7 @@ namespace GraphTheoryEditor
             Boolean bResult = sLabel != "";
             return bResult;
         }
-        public void DrawEdge(Graphics g, int iPosX0, int iPosY0, int iPosX1, int iPosY1)
+        public void drawEdge(Graphics g, int iPosX0, int iPosY0, int iPosX1, int iPosY1)
         {            
             Pen myPen = new Pen(cEdgeColor, iThickness);
                         

@@ -73,7 +73,7 @@ namespace GraphTheoryEditor
         }
 
 
-        public void ClearAllLabelsAndOrder()
+        public void clearAllLabelsAndOrder()
         {
             clearAllVertexLabels(-1);
             clearAllVertexVisited();
@@ -82,7 +82,7 @@ namespace GraphTheoryEditor
             clearAllEdgeLabels("");
         }
 
-        public void SetVertexRadius(int iVR)
+        public void setVertexRadius(int iVR)
         {
             int i;
             iVertexRadius = iVR;
@@ -91,7 +91,12 @@ namespace GraphTheoryEditor
                 lVertexList[i].SetRadius(iVertexRadius);                
         }
 
-        public void AddEdge(int iVertexIndex0, int iVertexIndex1)
+        public void addEdge(int iVertexIndex0, int iVertexIndex1)
+        {
+            addEdge(iVertexIndex0, iVertexIndex1, Color.Blue, Color.Black);
+        }
+        
+        public void addEdge(int iVertexIndex0, int iVertexIndex1, System.Drawing.Color cEdgeColor, System.Drawing.Color cLabelColor)
         {            
             //Make sure we only deal with the upper triangle of the adjacency matrix
             if(iVertexIndex0>iVertexIndex1)
@@ -110,7 +115,7 @@ namespace GraphTheoryEditor
                 for(iRow=0; iRow < iOldSize; iRow++)
                     for (iCol = 0; iCol < iOldSize; iCol++)
                     {
-                        eCurEdge = new Edge(eAdjMatrix[iRow, iCol].GetVertex0(), eAdjMatrix[iRow, iCol].GetVertex1());
+                        eCurEdge = new Edge(eAdjMatrix[iRow, iCol].GetVertex0(), eAdjMatrix[iRow, iCol].GetVertex1(), cEdgeColor, cLabelColor);
                         eCurEdge.SetWeight(eAdjMatrix[iRow, iCol].GetWeight());
 
                         eTempAdj[iRow, iCol] = eCurEdge;
@@ -120,7 +125,7 @@ namespace GraphTheoryEditor
                 for (iRow = 0; iRow < iOldSize; iRow++)
                     for (iCol = 0; iCol < iOldSize; iCol++)
                     {
-                        eCurEdge = new Edge(eTempAdj[iRow, iCol].GetVertex0(), eTempAdj[iRow, iCol].GetVertex1());
+                        eCurEdge = new Edge(eTempAdj[iRow, iCol].GetVertex0(), eTempAdj[iRow, iCol].GetVertex1(), cEdgeColor, cLabelColor);
                         eCurEdge.SetWeight(eTempAdj[iRow, iCol].GetWeight());
 
                         eAdjMatrix[iRow, iCol] = eCurEdge;
@@ -129,11 +134,13 @@ namespace GraphTheoryEditor
                 //Add new data
                 for (iRow = iOldSize; iRow < iNewSize; iRow++)
                     for (iCol = iOldSize; iCol < iNewSize; iCol++)
-                        eAdjMatrix[iRow, iCol] = new Edge(-1, -1);   
+                        eAdjMatrix[iRow, iCol] = new Edge(-1, -1, cEdgeColor, cLabelColor);   
                 
             }
 
             eAdjMatrix[iVertexIndex0, iVertexIndex1].SetVerticesV0V1(iVertexIndex0,iVertexIndex1);
+            eAdjMatrix[iVertexIndex0, iVertexIndex1].setLabelColor(cLabelColor);
+            eAdjMatrix[iVertexIndex0, iVertexIndex1].setColor(cEdgeColor);
         }
            
         //Relabels all vertices to the new labels passed in aiNewLabels
@@ -168,7 +175,7 @@ namespace GraphTheoryEditor
                         iPosY0 = Convert.ToInt32(lVertexList[iRow].GetY());
                         iPosX1 = Convert.ToInt32(lVertexList[iCol].GetX());
                         iPosY1 = Convert.ToInt32(lVertexList[iCol].GetY());
-                        eAdjMatrix[iRow, iCol].DrawEdge(g, iPosX0, iPosY0, iPosX1, iPosY1);
+                        eAdjMatrix[iRow, iCol].drawEdge(g, iPosX0, iPosY0, iPosX1, iPosY1);
                     }
 
             //Draw Vertices

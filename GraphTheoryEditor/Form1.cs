@@ -64,7 +64,7 @@ namespace GraphTheoryEditor
                         else
                         {
                             //Add Edge
-                            gCurrentGraph.AddEdge(iVertexSelectedIndex, iCurrentVertexSelectedIndex);
+                            gCurrentGraph.addEdge(iVertexSelectedIndex, iCurrentVertexSelectedIndex);
 
                             if (iVertexSelectedIndex > iCurrentVertexSelectedIndex)
                             {
@@ -316,7 +316,7 @@ namespace GraphTheoryEditor
                     {
                         sCurrentLine = sr.ReadLine();
                         aCurrentLine = sCurrentLine.Split(',');
-                        gCurrentGraph.AddEdge(Convert.ToInt32(aCurrentLine[0]),Convert.ToInt32(aCurrentLine[1]));                        
+                        gCurrentGraph.addEdge(Convert.ToInt32(aCurrentLine[0]),Convert.ToInt32(aCurrentLine[1]));                        
                     }
 
                     sr.Close();
@@ -544,7 +544,7 @@ namespace GraphTheoryEditor
                             int e1 = Convert.ToInt16(aCurLine[1]);
 
                             //Add edge to graph
-                            newGraph.AddEdge(e0, e1);
+                            newGraph.addEdge(e0, e1, Color.LightGray, Color.DarkRed);
                         }
                     }
 
@@ -573,32 +573,46 @@ namespace GraphTheoryEditor
                     {
                         formGraceful.Text = "Graceful Labeling Results";
                         formGraceful.Width = 1024;
-                        formGraceful.Height = 768;
+                        formGraceful.Height = 800;
                         formGraceful.StartPosition = FormStartPosition.CenterScreen;
                         PictureBox pictureBoxGraceful = new PictureBox();
+                        FlowLayoutPanel flowLayoutPanel = new FlowLayoutPanel();
                         pictureBoxGraceful.Width = Convert.ToInt16(formGraceful.Width * .95);
                         pictureBoxGraceful.Height = Convert.ToInt16(formGraceful.Height * .9);
+                        flowLayoutPanel.Width = Convert.ToInt16(formGraceful.Width * .95);
+                        flowLayoutPanel.Height = Convert.ToInt16(formGraceful.Height * .9);
+
                         pictureBoxGraceful.BackColor = Color.Beige;
 
+                        flowLayoutPanel.AutoScroll = true;
+                        //pictureBoxGraceful.SizeMode = PictureBoxSizeMode.Normal;
+                        
                         int iNumBoxesCol = 4, iNumBoxesRow = 4;
                         int iBoxWidth = pictureBoxGraceful.Width / iNumBoxesCol;
                         int iBoxHeight = pictureBoxGraceful.Height / iNumBoxesRow;
-                        Bitmap imgTarget = new Bitmap(pictureBoxGraceful.Width, pictureBoxGraceful.Height);
+                        int iNumBoxesPerScreen = iNumBoxesCol * iNumBoxesRow;
+                        int iNumScreens = lAllGracefulLabelings.Count / iNumBoxesPerScreen;
+                        int x, y;
+                        //Bitmap imgTarget = new Bitmap(pictureBoxGraceful.Width, pictureBoxGraceful.Height);
+                        Bitmap imgTarget = new Bitmap(pictureBoxGraceful.Width, pictureBoxGraceful.Height * iNumScreens);
+                        fillBitmapWithBackgroundColor(ref imgTarget, imgTarget.Width, imgTarget.Height, Color.White);
                         Graphics myGraphics = Graphics.FromImage(imgTarget);
                         
                         for(int iCtr = 0; iCtr < lAllGracefulLabelings.Count; iCtr++)
                         {
                             int[] aiLabel = lAllGracefulLabelings[iCtr];
-                            int x = iBoxWidth * (iCtr % iNumBoxesCol), y = iBoxHeight * (iCtr / iNumBoxesCol);
+                            x = iBoxWidth * (iCtr % iNumBoxesCol);
+                            y = iBoxHeight * (iCtr / iNumBoxesCol);
 
                             displayGraphInHomogenousCoordinates(ref myGraphics, newGraph, x, y, x + iBoxWidth, y + iBoxHeight, aiLabel);
 
-                            if (y > iBoxHeight * iNumBoxesRow)
-                                break;
+                            //if (y > iBoxHeight * iNumBoxesRow)
+                            //    break;
                         }
 
                         pictureBoxGraceful.Image = imgTarget;
-                                                                     
+                        //Save image to disk
+                        imgTarget.Save(sPath + @"\Output\" + "AllGracefulLabelings.jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
 
                         int btnWidth = 50, btnHeight = 20;
                         int posY = pictureBoxGraceful.Height + btnHeight;
@@ -619,7 +633,9 @@ namespace GraphTheoryEditor
                         btnLast.Text = "Last";
                         btnLast.Location = new Point(btnWidth * 3, posY);
 
-                        formGraceful.Controls.Add(pictureBoxGraceful);
+                        flowLayoutPanel.Controls.Add(pictureBoxGraceful);
+                        formGraceful.Controls.Add(flowLayoutPanel);
+                        //formGraceful.Controls.Add(pictureBoxGraceful);
                         formGraceful.Controls.Add(btnFirst);
                         formGraceful.Controls.Add(btnPrev);
                         formGraceful.Controls.Add(btnNext);
@@ -633,6 +649,15 @@ namespace GraphTheoryEditor
             catch(Exception)
             {
                 throw new ApplicationException("Failed opening graceful results graph");
+            }
+        }
+
+        private void fillBitmapWithBackgroundColor(ref Bitmap bmp, int w, int h, Color backColor)
+        {
+            using (Graphics gfx = Graphics.FromImage(bmp))
+            using (SolidBrush brush = new SolidBrush(backColor))
+            {
+                gfx.FillRectangle(brush, 0, 0, w, h);
             }
         }
 

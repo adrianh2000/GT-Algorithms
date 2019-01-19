@@ -168,7 +168,7 @@ namespace GraphTheoryEditor
         {
             //Graph gCloneGraph = (Graph)ObjectExtensions.Copy(gGraph);
             int n = gGraph.getNumVertices();
-            gGraph.ClearAllLabelsAndOrder();
+            gGraph.clearAllLabelsAndOrder();
 
             //Give each vertex's a DFS order starting from vertex 0 (it could be any vertex)
             DFSEdgesOrderToList(0, 0);
