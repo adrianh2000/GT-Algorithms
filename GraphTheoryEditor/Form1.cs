@@ -514,7 +514,7 @@ namespace GraphTheoryEditor
                     sFilename = dialogOpen.FileName;
                     fs = new FileStream(sFilename, FileMode.Open, FileAccess.Read);
                     sr = new StreamReader(fs);
-
+                   
                     //Skip first line
                     String sCurrentLine = sr.ReadLine();
 
@@ -572,33 +572,35 @@ namespace GraphTheoryEditor
                     using (Form formGraceful = new Form())
                     {
                         formGraceful.Text = "Graceful Labeling Results";
-                        formGraceful.Width = 1024;
+                        formGraceful.Width = 1600;
                         formGraceful.Height = 800;
                         formGraceful.StartPosition = FormStartPosition.CenterScreen;
                         PictureBox pictureBoxGraceful = new PictureBox();
                         FlowLayoutPanel flowLayoutPanel = new FlowLayoutPanel();
-                        pictureBoxGraceful.Width = Convert.ToInt16(formGraceful.Width * .95);
+                        pictureBoxGraceful.Width = Convert.ToInt16(formGraceful.Width * .99);
                         pictureBoxGraceful.Height = Convert.ToInt16(formGraceful.Height * .9);
-                        flowLayoutPanel.Width = Convert.ToInt16(formGraceful.Width * .95);
-                        flowLayoutPanel.Height = Convert.ToInt16(formGraceful.Height * .9);
+                        Panel panel = new Panel();
+                        panel.Width = Convert.ToInt16(formGraceful.Width * .99);
+                        panel.Height = Convert.ToInt16(formGraceful.Height * .9);
 
                         pictureBoxGraceful.BackColor = Color.Beige;
-
-                        flowLayoutPanel.AutoScroll = true;
-                        //pictureBoxGraceful.SizeMode = PictureBoxSizeMode.Normal;
                         
                         int iNumBoxesCol = 4, iNumBoxesRow = 4;
                         int iBoxWidth = pictureBoxGraceful.Width / iNumBoxesCol;
                         int iBoxHeight = pictureBoxGraceful.Height / iNumBoxesRow;
                         int iNumBoxesPerScreen = iNumBoxesCol * iNumBoxesRow;
-                        int iNumScreens = lAllGracefulLabelings.Count / iNumBoxesPerScreen;
+                        int iNumScreens = lAllGracefulLabelings.Count / iNumBoxesPerScreen + 1;
+                        int iNumScreensPerImgFile = 10, iImgCtr = 0;
+
                         int x, y;
                         //Bitmap imgTarget = new Bitmap(pictureBoxGraceful.Width, pictureBoxGraceful.Height);
                         Bitmap imgTarget = new Bitmap(pictureBoxGraceful.Width, pictureBoxGraceful.Height * iNumScreens);
                         fillBitmapWithBackgroundColor(ref imgTarget, imgTarget.Width, imgTarget.Height, Color.White);
                         Graphics myGraphics = Graphics.FromImage(imgTarget);
-                        
-                        for(int iCtr = 0; iCtr < lAllGracefulLabelings.Count; iCtr++)
+                        Font drawFont = new Font("Arial", 10);
+                        Brush brStringBrush = new SolidBrush(Color.DarkRed);
+
+                        for (int iCtr = 0; iCtr < lAllGracefulLabelings.Count; iCtr++)
                         {
                             int[] aiLabel = lAllGracefulLabelings[iCtr];
                             x = iBoxWidth * (iCtr % iNumBoxesCol);
@@ -606,41 +608,58 @@ namespace GraphTheoryEditor
 
                             displayGraphInHomogenousCoordinates(ref myGraphics, newGraph, x, y, x + iBoxWidth, y + iBoxHeight, aiLabel);
 
-                            //if (y > iBoxHeight * iNumBoxesRow)
-                            //    break;
+                            //create borders
+                            myGraphics.DrawRectangle(Pens.Pink, new Rectangle(x, y, iBoxWidth, iBoxHeight));
+
+                            //Add number box on top left
+                            myGraphics.DrawString(iCtr.ToString(), drawFont, brStringBrush, x, y);
                         }
 
                         pictureBoxGraceful.Image = imgTarget;
-                        //Save image to disk
-                        imgTarget.Save(sPath + @"\Output\" + "AllGracefulLabelings.jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
+
+                        //Save image to disk in the same path of the input text file
+                        string directoryPath = Path.GetDirectoryName(sFilename);
+                        
+                        imgTarget.Save(directoryPath + @"\" +"All Graceful Labelings Image.jpg", System.Drawing.Imaging.ImageFormat.Jpeg);                        
 
                         int btnWidth = 50, btnHeight = 20;
                         int posY = pictureBoxGraceful.Height + btnHeight;
-                        Button btnFirst = new Button();
-                        btnFirst.Text = "First";
-                        btnFirst.Location = new Point(0, posY);
-                        btnFirst.Click += new EventHandler(btnFirst_Click);
 
-                        Button btnPrev = new Button();
-                        btnPrev.Text = "<--";
-                        btnPrev.Location = new Point(btnWidth, posY);
+                        //Button btnOkay = new Button();
+                        //btnOkay.Text = "Okay";
+                        //btnOkay.Location = new Point(0, posY);
+                        //btnOkay.Click += new EventHandler(btnOkay_Click);
 
-                        Button btnNext = new Button();
-                        btnNext.Text = "-->";
-                        btnNext.Location = new Point(btnWidth * 2, posY);
+                        Label lblInfo = new Label();
+                        lblInfo.Text = "Graphics file saved as 'All Graceful Labelings Image.jpg' in the input file's folder";
+                        lblInfo.Location = new Point(0, posY);
+                        //lblInfo.TextAlign = ContentAlignment.MiddleRight;
+                        lblInfo.AutoSize = true;
+                        //Button btnFirst = new Button();
+                        //btnFirst.Text = "First";
+                        //btnFirst.Location = new Point(0, posY);
+                        //btnFirst.Click += new EventHandler(btnFirst_Click);
 
-                        Button btnLast = new Button();
-                        btnLast.Text = "Last";
-                        btnLast.Location = new Point(btnWidth * 3, posY);
+                        //Button btnPrev = new Button();
+                        //btnPrev.Text = "<--";
+                        //btnPrev.Location = new Point(btnWidth, posY);
 
-                        flowLayoutPanel.Controls.Add(pictureBoxGraceful);
-                        formGraceful.Controls.Add(flowLayoutPanel);
-                        //formGraceful.Controls.Add(pictureBoxGraceful);
-                        formGraceful.Controls.Add(btnFirst);
-                        formGraceful.Controls.Add(btnPrev);
-                        formGraceful.Controls.Add(btnNext);
-                        formGraceful.Controls.Add(btnLast);
+                        //Button btnNext = new Button();
+                        //btnNext.Text = "-->";
+                        //btnNext.Location = new Point(btnWidth * 2, posY);
 
+                        //Button btnLast = new Button();
+                        //btnLast.Text = "Last";
+                        //btnLast.Location = new Point(btnWidth * 3, posY);
+
+
+                        panel.AutoScroll = true;
+                        pictureBoxGraceful.SizeMode = PictureBoxSizeMode.AutoSize;
+                        panel.Controls.Add(pictureBoxGraceful);
+                        formGraceful.Controls.Add(panel);
+
+                        //formGraceful.Controls.Add(btnOkay);
+                        formGraceful.Controls.Add(lblInfo);
                         
                         formGraceful.ShowDialog();
                     }
@@ -660,14 +679,6 @@ namespace GraphTheoryEditor
                 gfx.FillRectangle(brush, 0, 0, w, h);
             }
         }
-
-        private void btnFirst_Click(object sender, System.EventArgs e)
-        {
-            int[] aLabels = lAllGracefulLabelings[0];
-            int iLabel = aLabels[0];
-        }
-
-
 
         //Displays the graph g in the pictureBox
         //The graph will display inside the x0, y0, x1, y1 rectangle

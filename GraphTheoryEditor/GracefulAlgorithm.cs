@@ -349,19 +349,19 @@ namespace GraphTheoryEditor
                 g.lVertexList[iCol].setLabel(labelPair.col);
 
                 //--------------- write execution tree to disk into files --------------
-                sCurLabeling = getCurrentLabeling(g, iLevel);
-                lSubLabels.Add(sCurLabeling);
-                iSubLabelsCtr++;
+                //sCurLabeling = getCurrentLabeling(g, iLevel);
+                //lSubLabels.Add(sCurLabeling);
+                //iSubLabelsCtr++;
 
-                //if (iSubLabelsCtr == 294)
-                //    iSubLabelsCtr += 0;
+                ////if (iSubLabelsCtr == 294)
+                ////    iSubLabelsCtr += 0;
 
-                if (lSubLabels.Count >= 50)
-                {                    
-                    saveAllSubLabelingsToFile(sPath, @"Sublabelings N=" + g.getNumVertices().ToString() + "-" + iSubLabelsFileNumber.ToString() + ".txt");
-                    iSubLabelsFileNumber++;
-                    lSubLabels.Clear();
-                }
+                //if (lSubLabels.Count >= 500)
+                //{                    
+                //    saveAllSubLabelingsToFile(sPath, @"Sublabelings N=" + g.getNumVertices().ToString() + "-" + iSubLabelsFileNumber.ToString() + ".txt");
+                //    iSubLabelsFileNumber++;
+                //    lSubLabels.Clear();
+                //}
 
                 //--------------------------------------------------
 
