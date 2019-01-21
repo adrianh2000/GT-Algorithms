@@ -377,14 +377,14 @@ namespace GraphTheoryEditor
         private void saveGraphScreenshotToolStripMenuItem_Click(object sender, EventArgs e)
         {
             //Save Graph image to file
-            String sDirectoryRoot = Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory()).ToString()).FullName;
-            String sNewDirectory = @"n = " + gCurrentGraph.lVertexList.Count.ToString() + ", " + DateTime.Now.ToShortDateString().Replace('/', '-') + ", " + DateTime.Now.ToShortTimeString().Replace(':', '_');
-            String sPath = sDirectoryRoot + @"\Output\";
+            //String sDirectoryRoot = Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory()).ToString()).FullName;
+            //String sNewDirectory = @"n = " + gCurrentGraph.lVertexList.Count.ToString() + ", " + DateTime.Now.ToShortDateString().Replace('/', '-') + ", " + DateTime.Now.ToShortTimeString().Replace(':', '_');
+            //String sPath = sDirectoryRoot + @"\Output\";
 
-            var bitmap = new Bitmap(pictureBoxMain.Width, pictureBoxMain.Height);
-            pictureBoxMain.DrawToBitmap(bitmap, pictureBoxMain.ClientRectangle);
-            bitmap.Save(sPath + "GraphTest.jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
-            //pictureBoxMain.Image.Save(sPath + "Graph.jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
+            //var bitmap = new Bitmap(pictureBoxMain.Width, pictureBoxMain.Height);
+            //pictureBoxMain.DrawToBitmap(bitmap, pictureBoxMain.ClientRectangle);
+            //bitmap.Save(sPath + "GraphTest.jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
+           
         }
                
 
@@ -590,21 +590,26 @@ namespace GraphTheoryEditor
                         int iBoxHeight = pictureBoxGraceful.Height / iNumBoxesRow;
                         int iNumBoxesPerScreen = iNumBoxesCol * iNumBoxesRow;
                         int iNumScreens = lAllGracefulLabelings.Count / iNumBoxesPerScreen + 1;
-                        int iNumScreensPerImgFile = 10, iImgCtr = 0;
+                        int iNumScreensPerImgFile = 10, iImgCtr = 0, iScreenCtr = 0;
+                        int x, y, iCtrScreen = 0;
 
-                        int x, y;
-                        //Bitmap imgTarget = new Bitmap(pictureBoxGraceful.Width, pictureBoxGraceful.Height);
-                        Bitmap imgTarget = new Bitmap(pictureBoxGraceful.Width, pictureBoxGraceful.Height * iNumScreens);
+                        //Bitmap imgTarget = new Bitmap(pictureBoxGraceful.Width, pictureBoxGraceful.Height * iNumScreens);
+                        Bitmap imgTarget = new Bitmap(pictureBoxGraceful.Width, pictureBoxGraceful.Height * iNumScreensPerImgFile);
                         fillBitmapWithBackgroundColor(ref imgTarget, imgTarget.Width, imgTarget.Height, Color.White);
                         Graphics myGraphics = Graphics.FromImage(imgTarget);
                         Font drawFont = new Font("Arial", 10);
                         Brush brStringBrush = new SolidBrush(Color.DarkRed);
 
+                        //Save image to disk in the same path of the input text file
+                        string sDirectoryPath = Path.GetDirectoryName(sFilename);
+
                         for (int iCtr = 0; iCtr < lAllGracefulLabelings.Count; iCtr++)
                         {
                             int[] aiLabel = lAllGracefulLabelings[iCtr];
                             x = iBoxWidth * (iCtr % iNumBoxesCol);
-                            y = iBoxHeight * (iCtr / iNumBoxesCol);
+                            y = iBoxHeight * (iCtrScreen / iNumBoxesCol);
+
+                            iCtrScreen++;
 
                             displayGraphInHomogenousCoordinates(ref myGraphics, newGraph, x, y, x + iBoxWidth, y + iBoxHeight, aiLabel);
 
@@ -613,16 +618,44 @@ namespace GraphTheoryEditor
 
                             //Add number box on top left
                             myGraphics.DrawString(iCtr.ToString(), drawFont, brStringBrush, x, y);
+
+                            //Check if a screen has been filled
+                            if((iCtr+1) % iNumBoxesPerScreen == 0)
+                            {
+                                iScreenCtr++;
+
+                                //Check if maximum number of screens per image file has been reached
+                                if(iScreenCtr >= iNumScreensPerImgFile)
+                                {
+                                    //Write image to disk
+                                    imgTarget.Save(sDirectoryPath + @"\" + "[" + iImgCtr.ToString("D5") +  "] All Graceful Labelings Image.jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
+
+                                    //Display the first screen in the form
+                                    if(iImgCtr == 0)
+                                        pictureBoxGraceful.Image = imgTarget;
+
+                                    //reset image and start new screen.
+                                    iScreenCtr = 0;
+                                    iImgCtr++;
+                                    iCtrScreen = 0;
+                                    imgTarget = new Bitmap(pictureBoxGraceful.Width, pictureBoxGraceful.Height * iNumScreensPerImgFile);
+                                    fillBitmapWithBackgroundColor(ref imgTarget, imgTarget.Width, imgTarget.Height, Color.White);
+                                    myGraphics = Graphics.FromImage(imgTarget);
+
+                                }
+                            }
                         }
 
-                        pictureBoxGraceful.Image = imgTarget;
 
-                        //Save image to disk in the same path of the input text file
-                        string directoryPath = Path.GetDirectoryName(sFilename);
-                        
-                        imgTarget.Save(directoryPath + @"\" +"All Graceful Labelings Image.jpg", System.Drawing.Imaging.ImageFormat.Jpeg);                        
+                        //Save the remaining graceful labeling image file to disk
+                        imgTarget.Save(sDirectoryPath + @"\" + "[" + iImgCtr.ToString("D5") + "] All Graceful Labelings Image.jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
 
-                        int btnWidth = 50, btnHeight = 20;
+                        //If there is only 1 image file, then load it into the form
+                        if(iImgCtr == 0)
+                            pictureBoxGraceful.Image = imgTarget;
+
+                        //int btnWidth = 50;
+                        int btnHeight = 20;
                         int posY = pictureBoxGraceful.Height + btnHeight;
 
                         //Button btnOkay = new Button();
@@ -632,33 +665,13 @@ namespace GraphTheoryEditor
 
                         Label lblInfo = new Label();
                         lblInfo.Text = "Graphics file saved as 'All Graceful Labelings Image.jpg' in the input file's folder";
-                        lblInfo.Location = new Point(0, posY);
-                        //lblInfo.TextAlign = ContentAlignment.MiddleRight;
+                        lblInfo.Location = new Point(0, posY);                        
                         lblInfo.AutoSize = true;
-                        //Button btnFirst = new Button();
-                        //btnFirst.Text = "First";
-                        //btnFirst.Location = new Point(0, posY);
-                        //btnFirst.Click += new EventHandler(btnFirst_Click);
-
-                        //Button btnPrev = new Button();
-                        //btnPrev.Text = "<--";
-                        //btnPrev.Location = new Point(btnWidth, posY);
-
-                        //Button btnNext = new Button();
-                        //btnNext.Text = "-->";
-                        //btnNext.Location = new Point(btnWidth * 2, posY);
-
-                        //Button btnLast = new Button();
-                        //btnLast.Text = "Last";
-                        //btnLast.Location = new Point(btnWidth * 3, posY);
-
-
                         panel.AutoScroll = true;
                         pictureBoxGraceful.SizeMode = PictureBoxSizeMode.AutoSize;
                         panel.Controls.Add(pictureBoxGraceful);
                         formGraceful.Controls.Add(panel);
-
-                        //formGraceful.Controls.Add(btnOkay);
+                        
                         formGraceful.Controls.Add(lblInfo);
                         
                         formGraceful.ShowDialog();
@@ -694,7 +707,7 @@ namespace GraphTheoryEditor
             {                
                 double x = w * v.GetX() + x0;
                 double y = h * v.GetY() + y0;
-                v.SetXY(x, y);
+                v.SetXY(x, y);                
             }
 
             //set graceful edge labels            
@@ -710,7 +723,12 @@ namespace GraphTheoryEditor
                     }
 
             //display graph
-            g.DrawGraph(e);
+            g.DrawGraph(e, 12);
+        }
+
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            System.Windows.Forms.MessageBox.Show("Graph Theory Algorithms by Adrian Heinz. (C) 2019");
         }
 
         //returns an array with the coordinates of the minimum rectangle containing all the vertices

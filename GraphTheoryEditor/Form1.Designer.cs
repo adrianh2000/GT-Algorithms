@@ -40,6 +40,7 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.graphToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveGraphScreenshotToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.loadGracefulResultsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.algorithmToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showDistancesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.depthFirstSearchDFSToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -52,7 +53,6 @@
             this.buttonDrawEdge = new System.Windows.Forms.Button();
             this.buttonDrawVertex = new System.Windows.Forms.Button();
             this.labelMouseCoordinates = new System.Windows.Forms.Label();
-            this.loadGracefulResultsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMain)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.panelMain.SuspendLayout();
@@ -145,10 +145,18 @@
             // 
             // saveGraphScreenshotToolStripMenuItem
             // 
+            this.saveGraphScreenshotToolStripMenuItem.Enabled = false;
             this.saveGraphScreenshotToolStripMenuItem.Name = "saveGraphScreenshotToolStripMenuItem";
             this.saveGraphScreenshotToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
             this.saveGraphScreenshotToolStripMenuItem.Text = "Save Graph &Screenshot";
             this.saveGraphScreenshotToolStripMenuItem.Click += new System.EventHandler(this.saveGraphScreenshotToolStripMenuItem_Click);
+            // 
+            // loadGracefulResultsToolStripMenuItem
+            // 
+            this.loadGracefulResultsToolStripMenuItem.Name = "loadGracefulResultsToolStripMenuItem";
+            this.loadGracefulResultsToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
+            this.loadGracefulResultsToolStripMenuItem.Text = "&Load Graceful Results";
+            this.loadGracefulResultsToolStripMenuItem.Click += new System.EventHandler(this.loadGracefulResultsToolStripMenuItem_Click);
             // 
             // algorithmToolStripMenuItem
             // 
@@ -163,6 +171,7 @@
             // 
             // showDistancesToolStripMenuItem
             // 
+            this.showDistancesToolStripMenuItem.Enabled = false;
             this.showDistancesToolStripMenuItem.Name = "showDistancesToolStripMenuItem";
             this.showDistancesToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
             this.showDistancesToolStripMenuItem.Text = "Show &Distances";
@@ -170,6 +179,7 @@
             // 
             // depthFirstSearchDFSToolStripMenuItem
             // 
+            this.depthFirstSearchDFSToolStripMenuItem.Enabled = false;
             this.depthFirstSearchDFSToolStripMenuItem.Name = "depthFirstSearchDFSToolStripMenuItem";
             this.depthFirstSearchDFSToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
             this.depthFirstSearchDFSToolStripMenuItem.Text = "Depth &First Search (DFS)";
@@ -194,8 +204,9 @@
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.aboutToolStripMenuItem.Text = "&About...";
+            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
             // panelMain
             // 
@@ -263,13 +274,6 @@
             this.labelMouseCoordinates.TabIndex = 4;
             this.labelMouseCoordinates.Text = "labelMouseCoordinates";
             // 
-            // loadGracefulResultsToolStripMenuItem
-            // 
-            this.loadGracefulResultsToolStripMenuItem.Name = "loadGracefulResultsToolStripMenuItem";
-            this.loadGracefulResultsToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
-            this.loadGracefulResultsToolStripMenuItem.Text = "&Load Graceful Results";
-            this.loadGracefulResultsToolStripMenuItem.Click += new System.EventHandler(this.loadGracefulResultsToolStripMenuItem_Click);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -281,7 +285,7 @@
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
-            this.Text = "Graph Theory Algorithms";
+            this.Text = "Graph Theory Algorithms by Adrian Heinz";
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMain)).EndInit();
             this.menuStrip1.ResumeLayout(false);
