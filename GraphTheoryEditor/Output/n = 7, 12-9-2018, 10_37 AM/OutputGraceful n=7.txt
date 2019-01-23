@@ -1,4 +1,0 @@
-Labelings for a tree n = 7
-Number of graceful labelings found: 0
-------------| Vertex labelings by vertex order |--------------------------------
-------------| Vertex labelings in DFS order |--------------------------------

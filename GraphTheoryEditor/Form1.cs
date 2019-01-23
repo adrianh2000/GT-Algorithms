@@ -17,6 +17,7 @@ namespace GraphTheoryEditor
         Graph gCurrentGraph;
         String sCurrentAction;
         List<int[]> lAllGracefulLabelings;
+        String sOutputPath;
 
         public Form1()
         {
@@ -30,6 +31,7 @@ namespace GraphTheoryEditor
             sCurrentAction = "SELECTING";
             iVertexSelectedIndex = -1;
             lAllGracefulLabelings = new List<int[]>();
+            sOutputPath = "";
         }
 
         private void pictureBoxMain_Click(object sender, EventArgs e)
@@ -389,12 +391,18 @@ namespace GraphTheoryEditor
                
 
         private void findGracefulLabelingsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            
-            String sDirectoryRoot = Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory()).ToString()).FullName;
-            String sToday = DateTime.Now.Year.ToString("D4") + "-" + DateTime.Now.Month.ToString("D2") + "-" + DateTime.Now.Day.ToString("D2") + ", " + DateTime.Now.ToShortTimeString().Replace(':', '_'); ; //  DateTime.Now.ToShortDateString().Replace('/', '-') + ", " + DateTime.Now.ToShortTimeString().Replace(':', '_');
+        {           
+            String sToday = DateTime.Now.Year.ToString("D4") + "-" + DateTime.Now.Month.ToString("D2") + "-" + DateTime.Now.Day.ToString("D2") + ", " + DateTime.Now.ToShortTimeString().Replace(':', '_');
             String sNewDirectory = sToday + @", n = " + gCurrentGraph.lVertexList.Count.ToString();
-            String sPath = sDirectoryRoot + @"\Output\" + sNewDirectory + @"\";
+            String sPath;
+
+            if (sOutputPath == "")
+            {
+                String sDirectoryRoot = Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory()).ToString()).FullName;
+                sPath = sDirectoryRoot + @"\Output\" + sNewDirectory + @"\";
+            }
+            else
+                sPath = sOutputPath + @"\" + sNewDirectory + @"\";
 
             if (Directory.Exists(sPath)) { 
                 MessageBox.Show("Directory: " + sPath + " already exists. Select another folder and try again");
@@ -729,6 +737,28 @@ namespace GraphTheoryEditor
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             System.Windows.Forms.MessageBox.Show("Graph Theory Algorithms by Adrian Heinz. (C) 2019");
+        }
+
+        private void defaultFolderToolStripMenuItem_Click(object sender, EventArgs e)
+        {            
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            String sFileName;
+
+            if (sOutputPath == "")
+                sOutputPath = Directory.GetCurrentDirectory();
+
+            openFileDialog.InitialDirectory = sOutputPath;
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                //Get the path of specified file
+                sFileName = openFileDialog.FileName;
+
+                sOutputPath = Path.GetDirectoryName(sFileName);
+
+                MessageBox.Show("Current default folder: " + sOutputPath, "Default folder successfully updated!", MessageBoxButtons.OK);
+            }
+            else
+                MessageBox.Show("Current default folder: " + sOutputPath, "Default folder NOT updated.", MessageBoxButtons.OK);
         }
 
         //returns an array with the coordinates of the minimum rectangle containing all the vertices
