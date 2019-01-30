@@ -21,7 +21,7 @@ namespace GraphTheoryEditor
 
         public GracefulAlgorithm(Graph _gGraph)
         {
-            gGraph = _gGraph;
+            gGraph = (Graph)ObjectExtensions.Copy(_gGraph);
             lEdgeDFSOrder = new edgeLocation[gGraph.lVertexList.Count-1];
             setAllValues(ref lEdgeDFSOrder, -1);
             lGracefulVertexLabels = new List<int[]>();

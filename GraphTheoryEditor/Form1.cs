@@ -27,6 +27,11 @@ namespace GraphTheoryEditor
         private void Form1_Load(object sender, EventArgs e)
         {
             this.CenterToScreen();
+            initApplication();
+        }
+
+        private void initApplication()
+        {
             gCurrentGraph = new Graph();
             sCurrentAction = "SELECTING";
             iVertexSelectedIndex = -1;
@@ -454,7 +459,7 @@ namespace GraphTheoryEditor
 
             sw.Close();
 
-            //----- create file to be imported into the python program that displays all labels graphically
+            //----- create file to be loaded by a menu item that displays all labels graphically
             //Get coordinates of minimum rectangle enclosing all vertices
             Double[] adBoxCoordinates = findBoxCoordinates();
             Double x0 = adBoxCoordinates[0], y0 = adBoxCoordinates[1], x1 = adBoxCoordinates[2], y1 = adBoxCoordinates[3];
@@ -602,11 +607,13 @@ namespace GraphTheoryEditor
                         int x, y, iCtrScreen = 0;
 
                         //Bitmap imgTarget = new Bitmap(pictureBoxGraceful.Width, pictureBoxGraceful.Height * iNumScreens);
-                        Bitmap imgTarget = new Bitmap(pictureBoxGraceful.Width, pictureBoxGraceful.Height * iNumScreensPerImgFile);
+                        int iImgWidh = pictureBoxGraceful.Width, iImgHeight = pictureBoxGraceful.Height * iNumScreensPerImgFile;
+                        Bitmap imgTarget = new Bitmap(iImgWidh, iImgHeight);
                         fillBitmapWithBackgroundColor(ref imgTarget, imgTarget.Width, imgTarget.Height, Color.White);
                         Graphics myGraphics = Graphics.FromImage(imgTarget);
                         Font drawFont = new Font("Arial", 10);
                         Brush brStringBrush = new SolidBrush(Color.DarkRed);
+                        Boolean bDebugFlag = false;
 
                         //Save image to disk in the same path of the input text file
                         string sDirectoryPath = Path.GetDirectoryName(sFilename);
@@ -627,14 +634,22 @@ namespace GraphTheoryEditor
                             //Add number box on top left
                             myGraphics.DrawString(iCtr.ToString(), drawFont, brStringBrush, x, y);
 
+                            //if(iCtr == 4321)
+                            //{
+                            //    bDebugFlag = true;
+                            //}
+
                             //Check if a screen has been filled
                             if((iCtr+1) % iNumBoxesPerScreen == 0)
                             {
                                 iScreenCtr++;
-
+                                
                                 //Check if maximum number of screens per image file has been reached
                                 if(iScreenCtr >= iNumScreensPerImgFile)
                                 {
+                                    //if (bDebugFlag)
+                                    //    iCtr += 0;
+
                                     //Write image to disk
                                     imgTarget.Save(sDirectoryPath + @"\" + "[" + iImgCtr.ToString("D5") +  "] All Graceful Labelings Image.jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
 
@@ -645,8 +660,9 @@ namespace GraphTheoryEditor
                                     //reset image and start new screen.
                                     iScreenCtr = 0;
                                     iImgCtr++;
-                                    iCtrScreen = 0;
-                                    imgTarget = new Bitmap(pictureBoxGraceful.Width, pictureBoxGraceful.Height * iNumScreensPerImgFile);
+                                    iCtrScreen = 0;   
+                                    imgTarget = new Bitmap(iImgWidh, iImgHeight);
+
                                     fillBitmapWithBackgroundColor(ref imgTarget, imgTarget.Width, imgTarget.Height, Color.White);
                                     myGraphics = Graphics.FromImage(imgTarget);
 
@@ -666,11 +682,6 @@ namespace GraphTheoryEditor
                         int btnHeight = 20;
                         int posY = pictureBoxGraceful.Height + btnHeight;
 
-                        //Button btnOkay = new Button();
-                        //btnOkay.Text = "Okay";
-                        //btnOkay.Location = new Point(0, posY);
-                        //btnOkay.Click += new EventHandler(btnOkay_Click);
-
                         Label lblInfo = new Label();
                         lblInfo.Text = "Graphics file saved as 'All Graceful Labelings Image.jpg' in the input file's folder";
                         lblInfo.Location = new Point(0, posY);                        
@@ -686,9 +697,9 @@ namespace GraphTheoryEditor
                     }
                 }
             }
-            catch(Exception)
+            catch(Exception excep)
             {
-                throw new ApplicationException("Failed opening graceful results graph");
+                throw new ApplicationException("Failed opening graceful results graph. "+ excep.Message);
             }
         }
 
@@ -761,6 +772,16 @@ namespace GraphTheoryEditor
                 MessageBox.Show("Current default folder: " + sOutputPath, "Default folder NOT updated.", MessageBoxButtons.OK);
         }
 
+        private void buttonDeleteGraph_Click(object sender, EventArgs e)
+        {
+            DialogResult res = MessageBox.Show("Are you sure you want to delete the current graph?", "Confirmation", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
+            if (res == DialogResult.OK)
+            {
+                initApplication();
+            }            
+            
+        }
+
         //returns an array with the coordinates of the minimum rectangle containing all the vertices
         //[0] -- > x0
         //[1] -- > y0
@@ -811,7 +832,10 @@ namespace GraphTheoryEditor
 
         public void playSound()
         {
-            System.Media.SoundPlayer player = new System.Media.SoundPlayer(@"I:\Research\Graph Theory\Graceful\Find all graceful labels\GraphTheoryEditorWithFindAllGracefulLabelings\GraphTheoryEditor\sounds\blast.wav");
+            String sDirectoryRoot = Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory()).ToString()).FullName;
+            String sPath = sDirectoryRoot + @"\sounds\";
+                        
+            System.Media.SoundPlayer player = new System.Media.SoundPlayer(sPath + "blast.wav");
             player.Play();
         }
     }

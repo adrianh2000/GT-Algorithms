@@ -1,0 +1,13 @@
+vertices. Vertex order,x,y
+0,.0777,.4762
+1,.5026,.5238
+2,.9223,.4921
+edges. Ei,Ej
+0,1
+1,2
+graceful labels. l0,l1,...,ln
+0,2,1,
+2,0,1,
+1,0,2,
+1,2,0,
+end

@@ -45,6 +45,8 @@
             this.showDistancesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.depthFirstSearchDFSToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.findGracefulLabelingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.defaultFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panelMain = new System.Windows.Forms.Panel();
@@ -53,8 +55,7 @@
             this.buttonDrawEdge = new System.Windows.Forms.Button();
             this.buttonDrawVertex = new System.Windows.Forms.Button();
             this.labelMouseCoordinates = new System.Windows.Forms.Label();
-            this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.defaultFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.buttonDeleteGraph = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMain)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.panelMain.SuspendLayout();
@@ -103,38 +104,38 @@
             // newToolStripMenuItem
             // 
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
             this.newToolStripMenuItem.Text = "&New";
             // 
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
             this.openToolStripMenuItem.Text = "&Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
             this.saveToolStripMenuItem.Text = "&Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // saveasToolStripMenuItem
             // 
             this.saveasToolStripMenuItem.Name = "saveasToolStripMenuItem";
-            this.saveasToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.saveasToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
             this.saveasToolStripMenuItem.Text = "Save &as...";
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(149, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(118, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
             this.exitToolStripMenuItem.Text = "E&xit";
             // 
             // graphToolStripMenuItem
@@ -195,88 +196,6 @@
             this.findGracefulLabelingsToolStripMenuItem.Text = "Find &Graceful Labelings";
             this.findGracefulLabelingsToolStripMenuItem.Click += new System.EventHandler(this.findGracefulLabelingsToolStripMenuItem_Click);
             // 
-            // helpToolStripMenuItem
-            // 
-            this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.aboutToolStripMenuItem});
-            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
-            this.helpToolStripMenuItem.Text = "&Help";
-            this.helpToolStripMenuItem.Click += new System.EventHandler(this.helpToolStripMenuItem_Click);
-            // 
-            // aboutToolStripMenuItem
-            // 
-            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.aboutToolStripMenuItem.Text = "&About...";
-            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
-            // 
-            // panelMain
-            // 
-            this.panelMain.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.panelMain.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.panelMain.Controls.Add(this.buttonCreateCircle);
-            this.panelMain.Controls.Add(this.buttonSelection);
-            this.panelMain.Controls.Add(this.buttonDrawEdge);
-            this.panelMain.Controls.Add(this.buttonDrawVertex);
-            this.panelMain.Location = new System.Drawing.Point(7, 27);
-            this.panelMain.Name = "panelMain";
-            this.panelMain.Size = new System.Drawing.Size(849, 42);
-            this.panelMain.TabIndex = 3;
-            // 
-            // buttonCreateCircle
-            // 
-            this.buttonCreateCircle.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("buttonCreateCircle.BackgroundImage")));
-            this.buttonCreateCircle.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.buttonCreateCircle.Location = new System.Drawing.Point(166, 0);
-            this.buttonCreateCircle.Name = "buttonCreateCircle";
-            this.buttonCreateCircle.Size = new System.Drawing.Size(46, 35);
-            this.buttonCreateCircle.TabIndex = 3;
-            this.buttonCreateCircle.UseVisualStyleBackColor = true;
-            this.buttonCreateCircle.Click += new System.EventHandler(this.buttonCreateCircle_Click);
-            // 
-            // buttonSelection
-            // 
-            this.buttonSelection.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("buttonSelection.BackgroundImage")));
-            this.buttonSelection.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.buttonSelection.Location = new System.Drawing.Point(10, 0);
-            this.buttonSelection.Name = "buttonSelection";
-            this.buttonSelection.Size = new System.Drawing.Size(46, 35);
-            this.buttonSelection.TabIndex = 2;
-            this.buttonSelection.UseVisualStyleBackColor = true;
-            this.buttonSelection.Click += new System.EventHandler(this.buttonSelection_Click);
-            // 
-            // buttonDrawEdge
-            // 
-            this.buttonDrawEdge.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("buttonDrawEdge.BackgroundImage")));
-            this.buttonDrawEdge.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.buttonDrawEdge.Location = new System.Drawing.Point(114, 0);
-            this.buttonDrawEdge.Name = "buttonDrawEdge";
-            this.buttonDrawEdge.Size = new System.Drawing.Size(46, 35);
-            this.buttonDrawEdge.TabIndex = 1;
-            this.buttonDrawEdge.UseVisualStyleBackColor = true;
-            this.buttonDrawEdge.Click += new System.EventHandler(this.buttonDrawEdge_Click);
-            // 
-            // buttonDrawVertex
-            // 
-            this.buttonDrawVertex.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("buttonDrawVertex.BackgroundImage")));
-            this.buttonDrawVertex.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.buttonDrawVertex.Location = new System.Drawing.Point(62, 0);
-            this.buttonDrawVertex.Name = "buttonDrawVertex";
-            this.buttonDrawVertex.Size = new System.Drawing.Size(46, 35);
-            this.buttonDrawVertex.TabIndex = 0;
-            this.buttonDrawVertex.UseVisualStyleBackColor = true;
-            this.buttonDrawVertex.Click += new System.EventHandler(this.buttonDrawVertex_Click);
-            // 
-            // labelMouseCoordinates
-            // 
-            this.labelMouseCoordinates.AutoSize = true;
-            this.labelMouseCoordinates.Location = new System.Drawing.Point(345, 9);
-            this.labelMouseCoordinates.Name = "labelMouseCoordinates";
-            this.labelMouseCoordinates.Size = new System.Drawing.Size(117, 13);
-            this.labelMouseCoordinates.TabIndex = 4;
-            this.labelMouseCoordinates.Text = "labelMouseCoordinates";
-            // 
             // settingsToolStripMenuItem
             // 
             this.settingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -291,6 +210,99 @@
             this.defaultFolderToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
             this.defaultFolderToolStripMenuItem.Text = "&Default folder...";
             this.defaultFolderToolStripMenuItem.Click += new System.EventHandler(this.defaultFolderToolStripMenuItem_Click);
+            // 
+            // helpToolStripMenuItem
+            // 
+            this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.aboutToolStripMenuItem});
+            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.helpToolStripMenuItem.Text = "&Help";
+            this.helpToolStripMenuItem.Click += new System.EventHandler(this.helpToolStripMenuItem_Click);
+            // 
+            // aboutToolStripMenuItem
+            // 
+            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
+            this.aboutToolStripMenuItem.Text = "&About...";
+            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
+            // 
+            // panelMain
+            // 
+            this.panelMain.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.panelMain.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panelMain.Controls.Add(this.buttonDeleteGraph);
+            this.panelMain.Controls.Add(this.buttonCreateCircle);
+            this.panelMain.Controls.Add(this.buttonSelection);
+            this.panelMain.Controls.Add(this.buttonDrawEdge);
+            this.panelMain.Controls.Add(this.buttonDrawVertex);
+            this.panelMain.Location = new System.Drawing.Point(7, 27);
+            this.panelMain.Name = "panelMain";
+            this.panelMain.Size = new System.Drawing.Size(849, 54);
+            this.panelMain.TabIndex = 3;
+            // 
+            // buttonCreateCircle
+            // 
+            this.buttonCreateCircle.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("buttonCreateCircle.BackgroundImage")));
+            this.buttonCreateCircle.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.buttonCreateCircle.Location = new System.Drawing.Point(196, 0);
+            this.buttonCreateCircle.Name = "buttonCreateCircle";
+            this.buttonCreateCircle.Size = new System.Drawing.Size(56, 47);
+            this.buttonCreateCircle.TabIndex = 3;
+            this.buttonCreateCircle.UseVisualStyleBackColor = true;
+            this.buttonCreateCircle.Click += new System.EventHandler(this.buttonCreateCircle_Click);
+            // 
+            // buttonSelection
+            // 
+            this.buttonSelection.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("buttonSelection.BackgroundImage")));
+            this.buttonSelection.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.buttonSelection.Location = new System.Drawing.Point(10, 0);
+            this.buttonSelection.Name = "buttonSelection";
+            this.buttonSelection.Size = new System.Drawing.Size(56, 47);
+            this.buttonSelection.TabIndex = 2;
+            this.buttonSelection.UseVisualStyleBackColor = true;
+            this.buttonSelection.Click += new System.EventHandler(this.buttonSelection_Click);
+            // 
+            // buttonDrawEdge
+            // 
+            this.buttonDrawEdge.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("buttonDrawEdge.BackgroundImage")));
+            this.buttonDrawEdge.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.buttonDrawEdge.Location = new System.Drawing.Point(134, -1);
+            this.buttonDrawEdge.Name = "buttonDrawEdge";
+            this.buttonDrawEdge.Size = new System.Drawing.Size(56, 47);
+            this.buttonDrawEdge.TabIndex = 1;
+            this.buttonDrawEdge.UseVisualStyleBackColor = true;
+            this.buttonDrawEdge.Click += new System.EventHandler(this.buttonDrawEdge_Click);
+            // 
+            // buttonDrawVertex
+            // 
+            this.buttonDrawVertex.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("buttonDrawVertex.BackgroundImage")));
+            this.buttonDrawVertex.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.buttonDrawVertex.Location = new System.Drawing.Point(72, 0);
+            this.buttonDrawVertex.Name = "buttonDrawVertex";
+            this.buttonDrawVertex.Size = new System.Drawing.Size(56, 47);
+            this.buttonDrawVertex.TabIndex = 0;
+            this.buttonDrawVertex.UseVisualStyleBackColor = true;
+            this.buttonDrawVertex.Click += new System.EventHandler(this.buttonDrawVertex_Click);
+            // 
+            // labelMouseCoordinates
+            // 
+            this.labelMouseCoordinates.AutoSize = true;
+            this.labelMouseCoordinates.Location = new System.Drawing.Point(345, 9);
+            this.labelMouseCoordinates.Name = "labelMouseCoordinates";
+            this.labelMouseCoordinates.Size = new System.Drawing.Size(117, 13);
+            this.labelMouseCoordinates.TabIndex = 4;
+            this.labelMouseCoordinates.Text = "labelMouseCoordinates";
+            // 
+            // buttonDeleteGraph
+            // 
+            this.buttonDeleteGraph.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("buttonDeleteGraph.BackgroundImage")));
+            this.buttonDeleteGraph.Location = new System.Drawing.Point(793, -2);
+            this.buttonDeleteGraph.Name = "buttonDeleteGraph";
+            this.buttonDeleteGraph.Size = new System.Drawing.Size(47, 49);
+            this.buttonDeleteGraph.TabIndex = 4;
+            this.buttonDeleteGraph.UseVisualStyleBackColor = true;
+            this.buttonDeleteGraph.Click += new System.EventHandler(this.buttonDeleteGraph_Click);
             // 
             // Form1
             // 
@@ -342,6 +354,7 @@
         private System.Windows.Forms.ToolStripMenuItem loadGracefulResultsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem defaultFolderToolStripMenuItem;
+        private System.Windows.Forms.Button buttonDeleteGraph;
     }
 }
 
